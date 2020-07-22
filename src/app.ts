@@ -1,13 +1,22 @@
+import bodyParser from 'body-parser';
 import express from 'express';
 import { logger } from './utils/logger';
+import { RequestBody } from './types/server-types';
 
 const app = express();
 
-// TODO: This is just an example request for demonstration
-app.get('/', (req, res) => {
-  logger.info(`${req.ip} GET /`);
+app.use(bodyParser.json());
+
+app.post('/upload', (req, res) => {
+  const body = req.body as RequestBody;
+
+  logger.info(`[${req.ip}] POST /upload`);
+
+  // TODO: Update return result to be a call to the library
+  const { measure, patient } = body;
   return res.json({
-    example: true
+    measure,
+    patient
   });
 });
 
