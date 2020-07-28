@@ -7,10 +7,10 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.post('/upload', (req, res) => {
+app.post('/calculate', (req, res) => {
   const body = req.body as RequestBody;
 
-  logger.info(`[${req.ip}] POST /upload`);
+  logger.info(`[${req.ip}] POST /calculate`);
 
   // TODO: Update return result to be a call to the library
   const { measure, patient } = body;
