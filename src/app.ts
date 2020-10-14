@@ -21,9 +21,7 @@ app.post('/calculateRaw', (req, res) => {
       patients,
       options || {} // options are optional, so this defaults to an empty Object
     );
-    return res.json({
-      rawResult
-    });
+    return res.json(rawResult);
   } catch (error) {
     return res.status(500).send(error);
   }
