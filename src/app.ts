@@ -6,7 +6,7 @@ import { Calculator } from 'fqm-execution';
 
 const app = express();
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
 
 app.post('/calculateRaw', (req, res) => {
   const body = req.body as RequestBody;
