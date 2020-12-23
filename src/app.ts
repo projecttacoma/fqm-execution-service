@@ -26,7 +26,8 @@ app.post('/calculateRaw', (req, res) => {
   }
 });
 
-app.post('/Measure/([$])care-gaps', (req, res) => {
+// matches '/Measure/$care-gaps' or encoded '/Measure/%24care-gaps'
+app.post(/^\/Measure\/(\$|%24)care-gaps/, (req, res) => {
   const body = req.body as RequestBody;
 
   logger.info(`[${req.ip}] POST /Measure/$care-gaps`);
