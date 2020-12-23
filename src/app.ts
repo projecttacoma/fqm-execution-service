@@ -13,7 +13,6 @@ app.post('/calculateRaw', (req, res) => {
 
   logger.info(`[${req.ip}] POST /calculateRaw`);
 
-  // TODO: Update return result to be a call to the library
   const { measure, patients, options } = body;
   try {
     const rawResult = Calculator.calculateRaw(
@@ -21,7 +20,25 @@ app.post('/calculateRaw', (req, res) => {
       patients,
       options || {} // options are optional, so this defaults to an empty Object
     );
-    return res.json(rawResult);
+    return res.json(rawResult.results);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+});
+
+app.post('/Measure/([$])care-gaps', (req, res) => {
+  const body = req.body as RequestBody;
+
+  logger.info(`[${req.ip}] POST /Measure/$care-gaps`);
+
+  const { measure, patients, options } = body;
+  try {
+    const careGapResult = Calculator.calculateGapsInCare(
+      measure,
+      patients,
+      options || {} // options are optional, so this defaults to an empty Object
+    );
+    return res.json(careGapResult.results);
   } catch (error) {
     return res.status(500).send(error);
   }
