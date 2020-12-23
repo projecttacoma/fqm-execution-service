@@ -7,6 +7,7 @@ Web service wrapper for [fqm-execution](https://github.com/projecttacoma/fqm-exe
 | Endpoint | Input | Output |
 | -------- | ----- | ------ |
 | `POST /calculateRaw` | [RequestBody](https://github.com/projecttacoma/fqm-execution-service/blob/master/src/types/server-types.ts#L3) | [cql.Results](https://github.com/projecttacoma/fqm-execution/blob/master/src/types/CQLTypes.ts#L14) |
+| `POST /Measure/$care-gaps` | [RequestBody](https://github.com/projecttacoma/fqm-execution-service/blob/master/src/types/server-types.ts#L3) | [R4.IBundle](https://www.hl7.org/fhir/bundle.html) |
 
 ## Usage
 
