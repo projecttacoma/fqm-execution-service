@@ -26,6 +26,25 @@ app.post('/calculateRaw', (req, res) => {
   }
 });
 
+app.post('/calculateMeasureReports', (req, res) => {
+  const body = req.body as RequestBody;
+
+  logger.info(`[${req.ip}] POST /calculateMeasureReports`);
+
+  const { measure, patients, options } = body;
+  try {
+    // default calculations to true
+    let opt = options ?? {};
+    opt.calculateHTML = options?.calculateHTML ?? true;
+    opt.calculateSDEs = options?.calculateSDEs ?? true;
+
+    const result = Calculator.calculateMeasureReports(measure, patients, opt);
+    return res.json(result);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+});
+
 // matches '/Measure/$care-gaps' or encoded '/Measure/%24care-gaps'
 app.post(/^\/Measure\/(\$|%24)care-gaps/, (req, res) => {
   const body = req.body as RequestBody;
