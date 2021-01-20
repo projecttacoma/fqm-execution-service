@@ -33,13 +33,12 @@ app.post('/calculateMeasureReports', (req, res) => {
 
   const { measure, patients, options } = body;
   try {
-    // default calculations to true
-    let opt = options ?? {};
-    opt.calculateHTML = options?.calculateHTML ?? true;
-    opt.calculateSDEs = options?.calculateSDEs ?? true;
-
-    const result = Calculator.calculateMeasureReports(measure, patients, opt);
-    return res.json(result);
+    const measureReportResult = Calculator.calculateMeasureReports(
+      measure,
+      patients,
+      options || {} // options are optional, so this defaults to an empty Object
+    );
+    return res.json(measureReportResult.results);
   } catch (error) {
     return res.status(500).send(error);
   }
@@ -59,6 +58,24 @@ app.post(/^\/Measure\/(\$|%24)care-gaps/, (req, res) => {
       options || {} // options are optional, so this defaults to an empty Object
     );
     return res.json(careGapResult.results);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+});
+
+app.post('/calculate', (req, res) => {
+  const body = req.body as RequestBody;
+
+  logger.info(`[${req.ip}] POST /calculate`);
+
+  const { measure, patients, options } = body;
+  try {
+    const calculateResult = Calculator.calculate(
+      measure,
+      patients,
+      options || {} // options are optional, so this defaults to an empty Object
+    );
+    return res.json(calculateResult.results);
   } catch (error) {
     return res.status(500).send(error);
   }
