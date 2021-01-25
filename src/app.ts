@@ -26,6 +26,24 @@ app.post('/calculateRaw', (req, res) => {
   }
 });
 
+app.post('/calculateMeasureReports', (req, res) => {
+  const body = req.body as RequestBody;
+
+  logger.info(`[${req.ip}] POST /calculateMeasureReports`);
+
+  const { measure, patients, options } = body;
+  try {
+    const measureReportResult = Calculator.calculateMeasureReports(
+      measure,
+      patients,
+      options || {} // options are optional, so this defaults to an empty Object
+    );
+    return res.json(measureReportResult.results);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+});
+
 // matches '/Measure/$care-gaps' or encoded '/Measure/%24care-gaps'
 app.post(/^\/Measure\/(\$|%24)care-gaps/, (req, res) => {
   const body = req.body as RequestBody;
@@ -40,6 +58,24 @@ app.post(/^\/Measure\/(\$|%24)care-gaps/, (req, res) => {
       options || {} // options are optional, so this defaults to an empty Object
     );
     return res.json(careGapResult.results);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+});
+
+app.post('/calculate', (req, res) => {
+  const body = req.body as RequestBody;
+
+  logger.info(`[${req.ip}] POST /calculate`);
+
+  const { measure, patients, options } = body;
+  try {
+    const calculateResult = Calculator.calculate(
+      measure,
+      patients,
+      options || {} // options are optional, so this defaults to an empty Object
+    );
+    return res.json(calculateResult.results);
   } catch (error) {
     return res.status(500).send(error);
   }

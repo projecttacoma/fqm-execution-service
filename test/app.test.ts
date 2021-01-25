@@ -46,3 +46,47 @@ test('gaps in care calculate', async () => {
 
   expect(response.body).toEqual(mockCareGapsResult.results);
 });
+
+const mockMeasureReportResult: { results: R4.IMeasureReport[]; debugOutput?: CalculatorTypes.DebugOutput } = {
+  results: [
+    {
+      resourceType: 'MeasureReport',
+      period: {},
+      measure: ''
+    }
+  ],
+  debugOutput: {}
+};
+
+const measureReportSpy = jest.spyOn(Calculator, 'calculateMeasureReports');
+when(measureReportSpy).calledWith(mockMeasureBundle, mockPatientBundles, {}).mockReturnValue(mockMeasureReportResult);
+
+test('measure reports calculate', async () => {
+  const response = await request(app)
+    .post('/calculateMeasureReports')
+    .send({ measure: mockMeasureBundle, patients: mockPatientBundles })
+    .expect(200);
+
+  expect(response.body).toEqual(mockMeasureReportResult.results);
+});
+
+const mockResult: { results: CalculatorTypes.ExecutionResult[]; debugOutput?: CalculatorTypes.DebugOutput } = {
+  results: [
+    {
+      patientId: ''
+    }
+  ],
+  debugOutput: {}
+};
+
+const calculateSpy = jest.spyOn(Calculator, 'calculate');
+when(calculateSpy).calledWith(mockMeasureBundle, mockPatientBundles, {}).mockReturnValue(mockResult);
+
+test('simple calculate', async () => {
+  const response = await request(app)
+    .post('/calculate')
+    .send({ measure: mockMeasureBundle, patients: mockPatientBundles })
+    .expect(200);
+
+  expect(response.body).toEqual(mockResult.results);
+});
