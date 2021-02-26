@@ -15,4 +15,12 @@ Web service wrapper for [fqm-execution](https://github.com/projecttacoma/fqm-exe
 
 ## Usage
 
+### Docker
+
+``` bash
+docker run -p 3000:3000 tacoma/fqm-execution-service:latest # Run server on port 3000
+```
+
+### Local
+
 Run the service with `npm start`. By default, it will run on port 3000. To change the port, do `PORT=XXXX npm start`
