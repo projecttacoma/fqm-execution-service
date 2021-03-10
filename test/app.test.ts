@@ -11,7 +11,7 @@ const mockRawResult: { results: CQLTypes.Results | string; debugOutput?: Calcula
     patientResults: {},
     unfilteredResults: {},
     localIdPatientResultsMap: {},
-    evaluatedRecords: []
+    patientEvaluatedRecords: {}
   },
   debugOutput: {}
 };
