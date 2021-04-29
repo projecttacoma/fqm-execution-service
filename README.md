@@ -16,10 +16,13 @@ Web service wrapper for [fqm-execution](https://github.com/projecttacoma/fqm-exe
 The input to each of the endpoints listed above is expected to be a JSON object, which conforms to the type format specified in [RequestBody](https://github.com/projecttacoma/fqm-execution-service/blob/master/src/types/server-types.ts#L3). This object contains 3 properties:
 
 * `measure`: a FHIR `Bundle` resource containing the `Measure` object, `Library` objects for every CQL/ELM library used in the measure, 
-  as well as `ValueSet` objects with code expansions included. 
+  as well as `ValueSet` objects with code expansions included.
+
 * `patients`: an array of FHIR `Bundle` resources, each of which contains the `Patient` object and any required clinical resources (`Condition`, `Medication`, etc.)
   for measure calculation. This must be an array, even if only one patient is provided.
+  
   * NOTE: `/Measure/$care-gaps` only accepts 1 patient in this array currently.
+
 * `options`: an optional object containing Calculation Options, each of which is listed below, with its default.
 
 #### Calculation Options
@@ -40,15 +43,23 @@ These types will be passed through to the calculation service, and will be used 
 ### Request Outputs
 
 Each request output has a different output format, based on the data being conveyed:
+
 * `/calculate`: an array of `ExecutionResult` objects. Each `ExecutionResult` object contains:
+
     * `patient`: the ID of the patient this object is associated with
+
     * `detailedResults`, a map of `group`s to an object which contains population-, statement-, and clause-level results for that group, as well as the html
+
       for that group (if requested by the provided options)
     * `evaluatedResource`: an array of the FHIR resources used in the calculation of the measure for this patient
+
     * `supplementalData`: if requested by the provided options, an array containing the raw and HTML structure results for each 
       supplemental data element in the measure, calculated for the specified patient
+
 * `/calculateRaw`: a `cql.Result` object, which contains: 
+
    * `patientResults`: A map of patient IDs to Statement-level results for that patient
+
      * A Statement-level result describes the results of one CQL Statement for this patient, including the name, the Library and ID of the Statement,
      the relevance of a given Statement to a patient population, and the actual result from the patient. See below for an example:
      ```json
@@ -62,17 +73,24 @@ Each request output has a different output format, based on the data being conve
             "pretty": "true"
      }
      ```
+
      * For more information on Clinical Quality Language (CQL) and Expression Logical Model (ELM) formats, see [the CQL specification](https://cql.hl7.org/)
+
    * `localIdPatientResultsMap`: A map of patient IDs to the raw results from every clause in every `Library` in the `Measure` resource.
+
    * `patientEvaluatedRecords`: A map of patient IDs to the evaluated records for that patient
+
 * `/Measure/$care-gaps`: a FHIR `Bundle` resource, which contains:
+
    * a `Composition` resource containing the actual Gaps in Care report
+
    * a `MeasureReport` resource containing the individual measure results for the patient passed in
+
    * a set of `DetectedIssue` resources, one for each gap in the measure. Each `DetectedIssue` resource represents a particular gap in care, 
      and will contain one or more `GuidanceResponse` resources detailing the data that could close that gap.
+
      * See [this fqm-execution wiki page](https://github.com/projecttacoma/fqm-execution/wiki/Gaps-In-Care) for more detail on the gaps-in-care
        methodology, and how to interpret this output.
-
 
 ### Calculator Architecture
 
