@@ -45,17 +45,33 @@ Each request output has a different output format, based on the data being conve
     * `detailedResults`, a map of `group`s to an object which contains population-, statement-, and clause-level results for that group, as well as the html
       for that group (if requested by the provided options)
     * `evaluatedResource`: an array of the FHIR resources used in the calculation of the measure for this patient
-    * `supplementalData`: if requested by the provided options, an array containing the raw and HTML structure results for each supplemental data element in the measure, 
-      calculated for the specified patient
+    * `supplementalData`: if requested by the provided options, an array containing the raw and HTML structure results for each 
+      supplemental data element in the measure, calculated for the specified patient
 * `/calculateRaw`: a `cql.Result` object, which contains: 
    * `patientResults`: A map of patient IDs to Statement-level results for that patient
+     * A Statement-level result describes the results of one CQL Statement for this patient, including the name, the Library and ID of the Statement,
+     the relevance of a given Statement to a patient population, and the actual result from the patient. See below for an example:
+     ```json
+     {
+            "libraryName": "EXM130",
+            "statementName": "Denominator",
+            "localId": "37",
+            "final": "TRUE",
+            "relevance": "TRUE",
+            "raw": true,
+            "pretty": "true"
+     }
+     ```
+     * For more information on Clinical Quality Language (CQL) and Expression Logical Model (ELM) formats, see [the CQL specification](https://cql.hl7.org/)
    * `localIdPatientResultsMap`: A map of patient IDs to the raw results from every clause in every `Library` in the `Measure` resource.
    * `patientEvaluatedRecords`: A map of patient IDs to the evaluated records for that patient
 * `/Measure/$care-gaps`: a FHIR `Bundle` resource, which contains:
    * a `Composition` resource containing the actual Gaps in Care report
    * a `MeasureReport` resource containing the individual measure results for the patient passed in
-   * a set of `DetectedIssue` resources, one for each gap in the measure. Each `DetectedIssue` resource will contain one or more
-     `GuidanceResponse` resources detailing the actual care gap being reported
+   * a set of `DetectedIssue` resources, one for each gap in the measure. Each `DetectedIssue` resource represents a particular gap in care, 
+     and will contain one or more `GuidanceResponse` resources detailing the data that could close that gap.
+     * See [this fqm-execution wiki page](https://github.com/projecttacoma/fqm-execution/wiki/Gaps-In-Care) for more detail on the gaps-in-care
+       methodology, and how to interpret this output.
 
 
 ### Calculator Architecture
@@ -76,7 +92,7 @@ Run the service with `npm start`. By default, it will run on port 3000. To chang
 
 ## License
 
-Copyright 2021 The MITRE Corporation
+Copyright 2020 The MITRE Corporation
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
