@@ -8,14 +8,14 @@ const app = express();
 
 app.use(bodyParser.json({ limit: '50mb' }));
 
-app.post('/calculateRaw', (req, res) => {
+app.post('/calculateRaw', async (req, res) => {
   const body = req.body as RequestBody;
 
   logger.info(`[${req.ip}] POST /calculateRaw`);
 
   const { measure, patients, options } = body;
   try {
-    const rawResult = Calculator.calculateRaw(
+    const rawResult = await Calculator.calculateRaw(
       measure,
       patients,
       options || {} // options are optional, so this defaults to an empty Object
@@ -26,14 +26,14 @@ app.post('/calculateRaw', (req, res) => {
   }
 });
 
-app.post('/calculateMeasureReports', (req, res) => {
+app.post('/calculateMeasureReports', async (req, res) => {
   const body = req.body as RequestBody;
 
   logger.info(`[${req.ip}] POST /calculateMeasureReports`);
 
   const { measure, patients, options } = body;
   try {
-    const measureReportResult = Calculator.calculateMeasureReports(
+    const measureReportResult = await Calculator.calculateMeasureReports(
       measure,
       patients,
       options || {} // options are optional, so this defaults to an empty Object
@@ -45,14 +45,14 @@ app.post('/calculateMeasureReports', (req, res) => {
 });
 
 // matches '/Measure/$care-gaps' or encoded '/Measure/%24care-gaps'
-app.post(/^\/Measure\/(\$|%24)care-gaps/, (req, res) => {
+app.post(/^\/Measure\/(\$|%24)care-gaps/, async (req, res) => {
   const body = req.body as RequestBody;
 
   logger.info(`[${req.ip}] POST /Measure/$care-gaps`);
 
   const { measure, patients, options } = body;
   try {
-    const careGapResult = Calculator.calculateGapsInCare(
+    const careGapResult = await Calculator.calculateGapsInCare(
       measure,
       patients,
       options || {} // options are optional, so this defaults to an empty Object
@@ -63,14 +63,14 @@ app.post(/^\/Measure\/(\$|%24)care-gaps/, (req, res) => {
   }
 });
 
-app.post('/calculate', (req, res) => {
+app.post('/calculate', async (req, res) => {
   const body = req.body as RequestBody;
 
   logger.info(`[${req.ip}] POST /calculate`);
 
   const { measure, patients, options } = body;
   try {
-    const calculateResult = Calculator.calculate(
+    const calculateResult = await Calculator.calculate(
       measure,
       patients,
       options || {} // options are optional, so this defaults to an empty Object

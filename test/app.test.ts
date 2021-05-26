@@ -17,7 +17,9 @@ const mockRawResult: { results: CQLTypes.Results | string; debugOutput?: Calcula
 };
 
 const calculateRawSpy = jest.spyOn(Calculator, 'calculateRaw');
-when(calculateRawSpy).calledWith(mockMeasureBundle, mockPatientBundles, {}).mockReturnValue(mockRawResult);
+when(calculateRawSpy)
+  .calledWith(mockMeasureBundle, mockPatientBundles, {})
+  .mockReturnValue(Promise.resolve(mockRawResult));
 
 test('patient and measure calculate', async () => {
   const response = await request(app)
@@ -36,7 +38,9 @@ const mockCareGapsResult: { results: R4.IBundle; debugOutput?: CalculatorTypes.D
 };
 
 const careGapsSpy = jest.spyOn(Calculator, 'calculateGapsInCare');
-when(careGapsSpy).calledWith(mockMeasureBundle, mockPatientBundles, {}).mockReturnValue(mockCareGapsResult);
+when(careGapsSpy)
+  .calledWith(mockMeasureBundle, mockPatientBundles, {})
+  .mockReturnValue(Promise.resolve(mockCareGapsResult));
 
 test('gaps in care calculate', async () => {
   const response = await request(app)
@@ -59,7 +63,9 @@ const mockMeasureReportResult: { results: R4.IMeasureReport[]; debugOutput?: Cal
 };
 
 const measureReportSpy = jest.spyOn(Calculator, 'calculateMeasureReports');
-when(measureReportSpy).calledWith(mockMeasureBundle, mockPatientBundles, {}).mockReturnValue(mockMeasureReportResult);
+when(measureReportSpy)
+  .calledWith(mockMeasureBundle, mockPatientBundles, {})
+  .mockReturnValue(Promise.resolve(mockMeasureReportResult));
 
 test('measure reports calculate', async () => {
   const response = await request(app)
@@ -80,7 +86,7 @@ const mockResult: { results: CalculatorTypes.ExecutionResult[]; debugOutput?: Ca
 };
 
 const calculateSpy = jest.spyOn(Calculator, 'calculate');
-when(calculateSpy).calledWith(mockMeasureBundle, mockPatientBundles, {}).mockReturnValue(mockResult);
+when(calculateSpy).calledWith(mockMeasureBundle, mockPatientBundles, {}).mockReturnValue(Promise.resolve(mockResult));
 
 test('simple calculate', async () => {
   const response = await request(app)
