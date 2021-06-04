@@ -37,6 +37,7 @@ The options that we support for calculation are as follows:
 | measurementPeriodEnd   | string  |    yes    |  End of measurement period. Defaults to the period provided in the `Measure` resource |
 | calculateSDEs          | boolean |    yes    |                Include Supplemental Data Elementss in calculation. Defaults to false. |
 | calculateHTML          | boolean |    yes    |                           Include HTML structure for highlighting. Defaults to false. |
+| reportType             | string  |    yes    |                         Type of MeasureReport to generate: "summary" or "individual". |
 
 These types will be passed through to the calculation service, and will be used in the execution of the measure.
 
