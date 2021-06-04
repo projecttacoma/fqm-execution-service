@@ -28,16 +28,16 @@ The input to each of the endpoints listed above is expected to be a JSON object,
 #### Calculation Options
 
 The options that we support for calculation are as follows:
-| option                 |  type   | optional? | description                                                                           |
-| :--------------------- | :-----: | :-------: |           :-------------------------------------------------------------------------- |
-| includeClauseResults   | boolean |    yes    |                                  Option to include clause results. Defaults to false. |
-| includePrettyResults   | boolean |    yes    |             Option to include pretty results on statement results. Defaults to false. |
-| includeHighlighting    | boolean |    yes    |                   Include highlighting in MeasureReport narrative. Defaults to false. |
-| measurementPeriodStart | string  |    yes    | Start of measurement period. Defaults to the period provided in the `Measure` resource|
-| measurementPeriodEnd   | string  |    yes    |  End of measurement period. Defaults to the period provided in the `Measure` resource |
-| calculateSDEs          | boolean |    yes    |                Include Supplemental Data Elementss in calculation. Defaults to false. |
-| calculateHTML          | boolean |    yes    |                           Include HTML structure for highlighting. Defaults to false. |
-| reportType             | string  |    yes    |                         Type of MeasureReport to generate: "summary" or "individual". |
+| option                 |  type   | optional? |  description                                                                           |
+| :--------------------- | :-----: | :-------: |            :-------------------------------------------------------------------------- |
+| includeClauseResults   | boolean |    yes    |                                   Option to include clause results. Defaults to false. |
+| includePrettyResults   | boolean |    yes    |              Option to include pretty results on statement results. Defaults to false. |
+| includeHighlighting    | boolean |    yes    |                    Include highlighting in MeasureReport narrative. Defaults to false. |
+| measurementPeriodStart | string  |    yes    |  Start of measurement period. Defaults to the period provided in the `Measure` resource|
+| measurementPeriodEnd   | string  |    yes    |   End of measurement period. Defaults to the period provided in the `Measure` resource |
+| calculateSDEs          | boolean |    yes    |                 Include Supplemental Data Elementss in calculation. Defaults to false. |
+| calculateHTML          | boolean |    yes    |                            Include HTML structure for highlighting. Defaults to false. |
+| reportType             | string  |    yes    | Type of MeasureReport to generate: "summary" or "individual". Defaults to "individual".|
 
 These types will be passed through to the calculation service, and will be used in the execution of the measure.
 
