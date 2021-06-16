@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import { logger } from './utils/logger';
-import { RequestBody } from './types/server-types';
+import { RequestBody, DataRequirementsBody } from './types/server-types';
 import { Calculator } from 'fqm-execution';
 
 const app = express();
@@ -58,6 +58,21 @@ app.post(/^\/Measure\/(\$|%24)care-gaps/, async (req, res) => {
       options || {} // options are optional, so this defaults to an empty Object
     );
     return res.json(careGapResult.results);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+});
+
+// matches '/Measure/$data-requirements' or encoded '/Measure/%24data-requirements'
+app.post(/^\/Measure\/(\$|%24)data-requirements/, async (req, res) => {
+  const body = req.body as DataRequirementsBody;
+
+  logger.info(`[${req.ip}] POST /Measure/$data-requirements`);
+
+  const { measure } = body;
+  try {
+    const dataRequirements = Calculator.calculateDataRequirements(measure);
+    return res.json(dataRequirements.results);
   } catch (error) {
     return res.status(500).send(error);
   }

@@ -51,6 +51,27 @@ test('gaps in care calculate', async () => {
   expect(response.body).toEqual(mockCareGapsResult.results);
 });
 
+const mockDataRequirementsResult: { results: R4.ILibrary; debugOutput?: CalculatorTypes.DebugOutput } = {
+  results: {
+    resourceType: 'Library',
+    type: {
+      coding: [{ code: 'module-definition', system: 'http://terminology.hl7.org/CodeSystem/library-type' }]
+    }
+  }
+};
+
+const DataRequirementsSpy = jest.spyOn(Calculator, 'calculateDataRequirements');
+when(DataRequirementsSpy).calledWith(mockMeasureBundle).mockReturnValue(mockDataRequirementsResult);
+
+test('data requirements calculate', async () => {
+  const response = await request(app)
+    .post('/Measure/$data-requirements')
+    .send({ measure: mockMeasureBundle })
+    .expect(200);
+
+  expect(response.body).toEqual(mockDataRequirementsResult.results);
+});
+
 const mockMeasureReportResult: { results: R4.IMeasureReport[]; debugOutput?: CalculatorTypes.DebugOutput } = {
   results: [
     {

@@ -6,24 +6,31 @@ Web service wrapper for [fqm-execution](https://github.com/projecttacoma/fqm-exe
 
 | Endpoint | Input | Output |
 | -------- | ----- | ------ |
-| `POST /calculate` | [RequestBody](https://github.com/projecttacoma/fqm-execution-service/blob/master/src/types/server-types.ts#L3) | [ExecutionResult[]](https://github.com/projecttacoma/fqm-execution/blob/794b86ca80c3e0e9dd970c1e049724bf7c67e353/src/types/Calculator.ts#L54) |
-| `POST /calculateRaw` | [RequestBody](https://github.com/projecttacoma/fqm-execution-service/blob/master/src/types/server-types.ts#L3) | [cql.Results](https://github.com/projecttacoma/fqm-execution/blob/master/src/types/CQLTypes.ts#L14) |
-| `POST /calculateMeasureReports` | [RequestBody](https://github.com/projecttacoma/fqm-execution-service/blob/master/src/types/server-types.ts#L3) | [R4.IMeasureReport[]](https://www.hl7.org/fhir/measurereport.html) |
-| `POST /Measure/$care-gaps` | [RequestBody](https://github.com/projecttacoma/fqm-execution-service/blob/master/src/types/server-types.ts#L3) | [R4.IBundle](https://www.hl7.org/fhir/bundle.html) |
+| `POST /calculate` | [RequestBody](https://github.com/projecttacoma/fqm-execution-service/blob/master/src/types/server-types.ts#L5) | [ExecutionResult[]](https://github.com/projecttacoma/fqm-execution/blob/794b86ca80c3e0e9dd970c1e049724bf7c67e353/src/types/Calculator.ts#L54) |
+| `POST /calculateRaw` | [RequestBody](https://github.com/projecttacoma/fqm-execution-service/blob/master/src/types/server-types.ts#L5) | [cql.Results](https://github.com/projecttacoma/fqm-execution/blob/master/src/types/CQLTypes.ts#L14) |
+| `POST /calculateMeasureReports` | [RequestBody](https://github.com/projecttacoma/fqm-execution-service/blob/master/src/types/server-types.ts#L5) | [R4.IMeasureReport[]](https://www.hl7.org/fhir/measurereport.html) |
+| `POST /Measure/$care-gaps` | [RequestBody](https://github.com/projecttacoma/fqm-execution-service/blob/master/src/types/server-types.ts#L5) | [R4.IBundle](https://www.hl7.org/fhir/bundle.html) |
+](https://www.hl7.org/fhir/measurereport.html) |
+| `POST /Measure/$data-requirements` | [DataRequirementsBody](https://github.com/projecttacoma/fqm-execution-service/blob/master/src/types/server-types.ts#L13) | [R4.ILibrary](https://www.hl7.org/fhir/library.html) |
 <!-- Note: linked line numbers may be inaccurate as code is updated -->
 
 ### Request Inputs
-The input to each of the endpoints listed above is expected to be a JSON object, which conforms to the type format specified in [RequestBody](https://github.com/projecttacoma/fqm-execution-service/blob/master/src/types/server-types.ts#L3). This object contains 3 properties:
+The input to each of the endpoints listed above is expected to be a JSON object, which conforms to the type format specified in [RequestBody](https://github.com/projecttacoma/fqm-execution-service/blob/master/src/types/server-types.ts#L5), or in [DataRequirementsBody](https://github.com/projecttacoma/fqm-execution-service/blob/master/src/types/server-types.ts#L13). This object contains 3 properties:
 
 * `measure`: a FHIR `Bundle` resource containing the `Measure` object, `Library` objects for every CQL/ELM library used in the measure, 
   as well as `ValueSet` objects with code expansions included.
+
+  * NOTE: `ValueSet` objects are not needed for `/Measure/$data-requirements`.
 
 * `patients`: an array of FHIR `Bundle` resources, each of which contains the `Patient` object and any required clinical resources (`Condition`, `Medication`, etc.)
   for measure calculation. This must be an array, even if only one patient is provided.
   
   * NOTE: `/Measure/$care-gaps` only accepts 1 patient in this array currently.
+  * NOTE: `/Measure/$data-requirements` does not accept `Patient` resources.
 
 * `options`: an optional object containing Calculation Options, each of which is listed below, with its default.
+
+  * NOTE: `/Measure/$data-requirements` does not accept an `options` resource.
 
 #### Calculation Options
 
@@ -92,6 +99,9 @@ Each request output has a different output format, based on the data being conve
 
      * See [this fqm-execution wiki page](https://github.com/projecttacoma/fqm-execution/wiki/Gaps-In-Care) for more detail on the gaps-in-care
        methodology, and how to interpret this output.
+
+* `/Measure/$data-requirements`: a FHIR module-definition `Library` resource, which contains:
+  * a `dataRequirement` array, with resources for each `datatype`/`valueSet` combination required.
 
 ### Calculator Architecture
 
