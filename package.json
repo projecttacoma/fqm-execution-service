@@ -1,6 +1,6 @@
 {
   "name": "fqm-execution-service",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "FHIR Quality Measure Execution Service",
   "main": "build/server.js",
   "files": [
