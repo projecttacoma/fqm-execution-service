@@ -37,7 +37,7 @@ The input to each of the endpoints listed above is expected to be a JSON object,
 
 The options that we support for calculation are as follows:
 | option                 |  type   | optional? |  description                                                                           |
-\| :--------------------- \| :-----: \| :-------: \|            :-------------------------------------------------------------------------- \|
+| :--------------------- | :-----: | :-------: |            :-------------------------------------------------------------------------- |
 | includeClauseResults   | boolean |    yes    |                                   Option to include clause results. Defaults to false. |
 | includePrettyResults   | boolean |    yes    |              Option to include pretty results on statement results. Defaults to false. |
 | includeHighlighting    | boolean |    yes    |                    Include highlighting in MeasureReport narrative. Defaults to false. |
