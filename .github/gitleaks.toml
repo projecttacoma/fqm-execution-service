@@ -264,5 +264,3 @@ title = "gitleaks config"
 [whitelist]
     description = "image whitelists"
     files = ['''(.*?)(jpg|gif|doc|pdf|bin|CMS31v4_SimpleXML.xml|CMS31v4.xml|vsac_auth_bad_credentials.yml|swagger_generator.rb|sonar.properties|sonar-project.properties|build.sbt|sonar-project-benelevel-eligibility-filter.properties)$''']
-
-
