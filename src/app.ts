@@ -20,9 +20,20 @@ app.post('/calculateRaw', async (req, res) => {
       patients,
       options || {} // options are optional, so this defaults to an empty Object
     );
-    return res.json(rawResult.results);
+    /**
+     * TODO:
+     * Format of RawResults output should maybe be changed in fqm-execution to adapt to new withErrors field.
+     * Currently rawResults output is either the rawResults object (on a successful run) or an error message
+     * with an explanation for the failure. I think we should instead just throw an error upon failure, not
+     * return an error string.
+     */
+    return res.json({ results: rawResult.results, warnings: rawResult.withErrors });
   } catch (error) {
-    return res.status(500).send(error);
+    logger.log({
+      level: 'error',
+      message: error.stack
+    });
+    return res.status(500).send({ name: error.name, message: error.message });
   }
 });
 
@@ -38,9 +49,13 @@ app.post('/calculateMeasureReports', async (req, res) => {
       patients,
       options || {} // options are optional, so this defaults to an empty Object
     );
-    return res.json(measureReportResult.results);
+    return res.json({ results: measureReportResult.results, warnings: measureReportResult.withErrors });
   } catch (error) {
-    return res.status(500).send(error);
+    logger.log({
+      level: 'error',
+      message: error.stack
+    });
+    return res.status(500).send({ name: error.name, message: error.message });
   }
 });
 
@@ -57,9 +72,13 @@ app.post(/^\/Measure\/(\$|%24)care-gaps/, async (req, res) => {
       patients,
       options || {} // options are optional, so this defaults to an empty Object
     );
-    return res.json(careGapResult.results);
+    return res.json({ results: careGapResult.results, warnings: careGapResult.withErrors });
   } catch (error) {
-    return res.status(500).send(error);
+    logger.log({
+      level: 'error',
+      message: error.stack
+    });
+    return res.status(500).send({ name: error.name, message: error.message });
   }
 });
 
@@ -72,9 +91,13 @@ app.post(/^\/Measure\/(\$|%24)data-requirements/, async (req, res) => {
   const { measure } = body;
   try {
     const dataRequirements = Calculator.calculateDataRequirements(measure);
-    return res.json(dataRequirements.results);
+    return res.json({ results: dataRequirements.results, warnings: dataRequirements.withErrors });
   } catch (error) {
-    return res.status(500).send(error);
+    logger.log({
+      level: 'error',
+      message: error.stack
+    });
+    return res.status(500).send({ name: error.name, message: error.message });
   }
 });
 
@@ -90,9 +113,13 @@ app.post('/calculate', async (req, res) => {
       patients,
       options || {} // options are optional, so this defaults to an empty Object
     );
-    return res.json(calculateResult.results);
+    return res.json({ results: calculateResult.results, withErrors: calculateResult.withErrors });
   } catch (error) {
-    return res.status(500).send(error);
+    logger.log({
+      level: 'error',
+      message: error.stack
+    });
+    return res.status(500).send({ name: error.name, message: error.message });
   }
 });
 

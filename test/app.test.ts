@@ -2,6 +2,7 @@ import { Calculator, CalculatorTypes, CQLTypes } from 'fqm-execution';
 import { when } from 'jest-when';
 import request from 'supertest';
 import app from '../src/app';
+import fs from 'fs';
 
 const mockMeasureBundle = <fhir4.Bundle>{};
 const mockPatientBundles = <fhir4.Bundle[]>[];
@@ -26,7 +27,7 @@ test('patient and measure calculate', async () => {
     .send({ measure: mockMeasureBundle, patients: mockPatientBundles })
     .expect(200);
 
-  expect(response.body).toEqual(mockRawResult.results);
+  expect(response.body.results).toEqual(mockRawResult.results);
 });
 
 const mockCareGapsResult: { results: fhir4.Bundle; debugOutput?: CalculatorTypes.DebugOutput } = {
@@ -47,8 +48,8 @@ test('gaps in care calculate', async () => {
     .post('/Measure/$care-gaps')
     .send({ measure: mockMeasureBundle, patients: mockPatientBundles })
     .expect(200);
-
-  expect(response.body).toEqual(mockCareGapsResult.results);
+  console.log(response.body);
+  expect(response.body.results).toEqual(mockCareGapsResult.results);
 });
 
 const mockDataRequirementsResult: { results: fhir4.Library; debugOutput?: CalculatorTypes.DebugOutput } = {
@@ -70,7 +71,7 @@ test('data requirements calculate', async () => {
     .send({ measure: mockMeasureBundle })
     .expect(200);
 
-  expect(response.body).toEqual(mockDataRequirementsResult.results);
+  expect(response.body.results).toEqual(mockDataRequirementsResult.results);
 });
 
 const mockMeasureReportResult: { results: fhir4.MeasureReport[]; debugOutput?: CalculatorTypes.DebugOutput } = {
@@ -97,7 +98,7 @@ test('measure reports calculate', async () => {
     .send({ measure: mockMeasureBundle, patients: mockPatientBundles })
     .expect(200);
 
-  expect(response.body).toEqual(mockMeasureReportResult.results);
+  expect(response.body.results).toEqual(mockMeasureReportResult.results);
 });
 
 const mockResult: { results: CalculatorTypes.ExecutionResult[]; debugOutput?: CalculatorTypes.DebugOutput } = {
@@ -118,5 +119,9 @@ test('simple calculate', async () => {
     .send({ measure: mockMeasureBundle, patients: mockPatientBundles })
     .expect(200);
 
-  expect(response.body).toEqual(mockResult.results);
+  expect(response.body.results).toEqual(mockResult.results);
 });
+function parseBundle(filePath: string): R4.IBundle {
+  const contents = fs.readFileSync(filePath, 'utf8');
+  return JSON.parse(contents) as R4.IBundle;
+}
