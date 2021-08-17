@@ -2,7 +2,6 @@ import { Calculator, CalculatorTypes, CQLTypes } from 'fqm-execution';
 import { when } from 'jest-when';
 import request from 'supertest';
 import app from '../src/app';
-import fs from 'fs';
 
 const mockMeasureBundle = <fhir4.Bundle>{};
 const mockPatientBundles = <fhir4.Bundle[]>[];
@@ -121,7 +120,3 @@ test('simple calculate', async () => {
 
   expect(response.body.results).toEqual(mockResult.results);
 });
-function parseBundle(filePath: string): R4.IBundle {
-  const contents = fs.readFileSync(filePath, 'utf8');
-  return JSON.parse(contents) as R4.IBundle;
-}
