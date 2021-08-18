@@ -1,11 +1,10 @@
-import { R4 } from '@ahryman40k/ts-fhir-types';
 import { Calculator, CalculatorTypes, CQLTypes } from 'fqm-execution';
 import { when } from 'jest-when';
 import request from 'supertest';
 import app from '../src/app';
 
-const mockMeasureBundle = <R4.IBundle>{};
-const mockPatientBundles = <R4.IBundle[]>[];
+const mockMeasureBundle = <fhir4.Bundle>{};
+const mockPatientBundles = <fhir4.Bundle[]>[];
 const mockRawResult: { results: CQLTypes.Results | string; debugOutput?: CalculatorTypes.DebugOutput } = {
   results: {
     patientResults: {},
@@ -30,9 +29,10 @@ test('patient and measure calculate', async () => {
   expect(response.body).toEqual(mockRawResult.results);
 });
 
-const mockCareGapsResult: { results: R4.IBundle; debugOutput?: CalculatorTypes.DebugOutput } = {
+const mockCareGapsResult: { results: fhir4.Bundle; debugOutput?: CalculatorTypes.DebugOutput } = {
   results: {
-    resourceType: 'Bundle'
+    resourceType: 'Bundle',
+    type: 'transaction'
   },
   debugOutput: {}
 };
@@ -51,12 +51,13 @@ test('gaps in care calculate', async () => {
   expect(response.body).toEqual(mockCareGapsResult.results);
 });
 
-const mockDataRequirementsResult: { results: R4.ILibrary; debugOutput?: CalculatorTypes.DebugOutput } = {
+const mockDataRequirementsResult: { results: fhir4.Library; debugOutput?: CalculatorTypes.DebugOutput } = {
   results: {
     resourceType: 'Library',
     type: {
       coding: [{ code: 'module-definition', system: 'http://terminology.hl7.org/CodeSystem/library-type' }]
-    }
+    },
+    status: 'draft'
   }
 };
 
@@ -72,12 +73,14 @@ test('data requirements calculate', async () => {
   expect(response.body).toEqual(mockDataRequirementsResult.results);
 });
 
-const mockMeasureReportResult: { results: R4.IMeasureReport[]; debugOutput?: CalculatorTypes.DebugOutput } = {
+const mockMeasureReportResult: { results: fhir4.MeasureReport[]; debugOutput?: CalculatorTypes.DebugOutput } = {
   results: [
     {
       resourceType: 'MeasureReport',
       period: {},
-      measure: ''
+      measure: '',
+      status: 'complete',
+      type: 'individual'
     }
   ],
   debugOutput: {}
