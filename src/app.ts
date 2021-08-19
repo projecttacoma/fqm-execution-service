@@ -1,8 +1,9 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import { logger } from './utils/logger';
-import { RequestBody, DataRequirementsBody } from './types/server-types';
+import { RequestBody, DataRequirementsBody } from './types/ServerTypes';
 import { Calculator } from 'fqm-execution';
+import { getErrorCode } from './ErrorConverter';
 
 const app = express();
 
@@ -20,20 +21,14 @@ app.post('/calculateRaw', async (req, res) => {
       patients,
       options || {} // options are optional, so this defaults to an empty Object
     );
-    /**
-     * TODO:
-     * Format of RawResults output should maybe be changed in fqm-execution to adapt to new withErrors field.
-     * Currently rawResults output is either the rawResults object (on a successful run) or an error message
-     * with an explanation for the failure. I think we should instead just throw an error upon failure, not
-     * return an error string.
-     */
+
     return res.json({ results: rawResult.results, warnings: rawResult.withErrors });
   } catch (error) {
     logger.log({
       level: 'error',
       message: error.stack
     });
-    return res.status(500).send({ name: error.name, message: error.message });
+    return res.status(getErrorCode(error)).send({ name: error.name, message: error.message });
   }
 });
 
@@ -55,7 +50,7 @@ app.post('/calculateMeasureReports', async (req, res) => {
       level: 'error',
       message: error.stack
     });
-    return res.status(500).send({ name: error.name, message: error.message });
+    return res.status(getErrorCode(error)).send({ name: error.name, message: error.message });
   }
 });
 
@@ -78,7 +73,7 @@ app.post(/^\/Measure\/(\$|%24)care-gaps/, async (req, res) => {
       level: 'error',
       message: error.stack
     });
-    return res.status(500).send({ name: error.name, message: error.message });
+    return res.status(getErrorCode(error)).send({ name: error.name, message: error.message });
   }
 });
 
@@ -97,7 +92,7 @@ app.post(/^\/Measure\/(\$|%24)data-requirements/, async (req, res) => {
       level: 'error',
       message: error.stack
     });
-    return res.status(500).send({ name: error.name, message: error.message });
+    return res.status(getErrorCode(error)).send({ name: error.name, message: error.message });
   }
 });
 
@@ -119,7 +114,7 @@ app.post('/calculate', async (req, res) => {
       level: 'error',
       message: error.stack
     });
-    return res.status(500).send({ name: error.name, message: error.message });
+    return res.status(getErrorCode(error)).send({ name: error.name, message: error.message });
   }
 });
 

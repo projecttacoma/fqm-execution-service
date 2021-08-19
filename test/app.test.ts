@@ -47,7 +47,6 @@ test('gaps in care calculate', async () => {
     .post('/Measure/$care-gaps')
     .send({ measure: mockMeasureBundle, patients: mockPatientBundles })
     .expect(200);
-  console.log(response.body);
   expect(response.body.results).toEqual(mockCareGapsResult.results);
 });
 
