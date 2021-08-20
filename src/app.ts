@@ -1,8 +1,9 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import { logger } from './utils/logger';
-import { RequestBody, DataRequirementsBody } from './types/server-types';
+import { RequestBody, DataRequirementsBody } from './types/ServerTypes';
 import { Calculator } from 'fqm-execution';
+import { getErrorCode } from './ErrorConverter';
 
 const app = express();
 
@@ -20,9 +21,14 @@ app.post('/calculateRaw', async (req, res) => {
       patients,
       options || {} // options are optional, so this defaults to an empty Object
     );
-    return res.json(rawResult.results);
+
+    return res.json({ results: rawResult.results, warnings: rawResult.withErrors });
   } catch (error) {
-    return res.status(500).send(error);
+    logger.log({
+      level: 'error',
+      message: error.stack
+    });
+    return res.status(getErrorCode(error)).send({ name: error.name, message: error.message });
   }
 });
 
@@ -38,9 +44,13 @@ app.post('/calculateMeasureReports', async (req, res) => {
       patients,
       options || {} // options are optional, so this defaults to an empty Object
     );
-    return res.json(measureReportResult.results);
+    return res.json({ results: measureReportResult.results, warnings: measureReportResult.withErrors });
   } catch (error) {
-    return res.status(500).send(error);
+    logger.log({
+      level: 'error',
+      message: error.stack
+    });
+    return res.status(getErrorCode(error)).send({ name: error.name, message: error.message });
   }
 });
 
@@ -57,9 +67,13 @@ app.post(/^\/Measure\/(\$|%24)care-gaps/, async (req, res) => {
       patients,
       options || {} // options are optional, so this defaults to an empty Object
     );
-    return res.json(careGapResult.results);
+    return res.json({ results: careGapResult.results, warnings: careGapResult.withErrors });
   } catch (error) {
-    return res.status(500).send(error);
+    logger.log({
+      level: 'error',
+      message: error.stack
+    });
+    return res.status(getErrorCode(error)).send({ name: error.name, message: error.message });
   }
 });
 
@@ -72,9 +86,13 @@ app.post(/^\/Measure\/(\$|%24)data-requirements/, async (req, res) => {
   const { measure } = body;
   try {
     const dataRequirements = Calculator.calculateDataRequirements(measure);
-    return res.json(dataRequirements.results);
+    return res.json({ results: dataRequirements.results, warnings: dataRequirements.withErrors });
   } catch (error) {
-    return res.status(500).send(error);
+    logger.log({
+      level: 'error',
+      message: error.stack
+    });
+    return res.status(getErrorCode(error)).send({ name: error.name, message: error.message });
   }
 });
 
@@ -90,9 +108,13 @@ app.post('/calculate', async (req, res) => {
       patients,
       options || {} // options are optional, so this defaults to an empty Object
     );
-    return res.json(calculateResult.results);
+    return res.json({ results: calculateResult.results, withErrors: calculateResult.withErrors });
   } catch (error) {
-    return res.status(500).send(error);
+    logger.log({
+      level: 'error',
+      message: error.stack
+    });
+    return res.status(getErrorCode(error)).send({ name: error.name, message: error.message });
   }
 });
 

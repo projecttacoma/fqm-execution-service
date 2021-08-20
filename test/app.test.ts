@@ -26,7 +26,7 @@ test('patient and measure calculate', async () => {
     .send({ measure: mockMeasureBundle, patients: mockPatientBundles })
     .expect(200);
 
-  expect(response.body).toEqual(mockRawResult.results);
+  expect(response.body.results).toEqual(mockRawResult.results);
 });
 
 const mockCareGapsResult: { results: fhir4.Bundle; debugOutput?: CalculatorTypes.DebugOutput } = {
@@ -47,8 +47,7 @@ test('gaps in care calculate', async () => {
     .post('/Measure/$care-gaps')
     .send({ measure: mockMeasureBundle, patients: mockPatientBundles })
     .expect(200);
-
-  expect(response.body).toEqual(mockCareGapsResult.results);
+  expect(response.body.results).toEqual(mockCareGapsResult.results);
 });
 
 const mockDataRequirementsResult: { results: fhir4.Library; debugOutput?: CalculatorTypes.DebugOutput } = {
@@ -70,7 +69,7 @@ test('data requirements calculate', async () => {
     .send({ measure: mockMeasureBundle })
     .expect(200);
 
-  expect(response.body).toEqual(mockDataRequirementsResult.results);
+  expect(response.body.results).toEqual(mockDataRequirementsResult.results);
 });
 
 const mockMeasureReportResult: { results: fhir4.MeasureReport[]; debugOutput?: CalculatorTypes.DebugOutput } = {
@@ -97,7 +96,7 @@ test('measure reports calculate', async () => {
     .send({ measure: mockMeasureBundle, patients: mockPatientBundles })
     .expect(200);
 
-  expect(response.body).toEqual(mockMeasureReportResult.results);
+  expect(response.body.results).toEqual(mockMeasureReportResult.results);
 });
 
 const mockResult: { results: CalculatorTypes.ExecutionResult[]; debugOutput?: CalculatorTypes.DebugOutput } = {
@@ -118,5 +117,5 @@ test('simple calculate', async () => {
     .send({ measure: mockMeasureBundle, patients: mockPatientBundles })
     .expect(200);
 
-  expect(response.body).toEqual(mockResult.results);
+  expect(response.body.results).toEqual(mockResult.results);
 });
