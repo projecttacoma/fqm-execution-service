@@ -19,7 +19,7 @@ jobs:
         with:
           # list of Docker images to use as base name for tags
           images: |
-            tacoma/fqm-execution-service
+            mitrehealthdocker/fqm-execution-service
           flavor: |
             latest=${{ github.ref == 'refs/heads/master' }}
           # generate Docker tags based on the following events/attributes
