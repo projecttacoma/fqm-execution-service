@@ -3,14 +3,22 @@
   "include": ["src"],
   "compilerOptions": {
     "resolveJsonModule": true,
-    "target": "es5",
-    "module": "commonjs",
+    "target": "ES2017",
+    "lib": ["ESNext"],
+    "module": "CommonJS",
     "allowJs": true,
     "outDir": "./build",
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "useUnknownInCatchVariables": false
+  },
+  "ts-node": {
+    "files": true
   }
 }
