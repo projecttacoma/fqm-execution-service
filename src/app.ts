@@ -1,4 +1,3 @@
-import bodyParser from 'body-parser';
 import express from 'express';
 import { logger } from './utils/logger';
 import { RequestBody, DataRequirementsBody } from './types/ServerTypes';
@@ -7,7 +6,7 @@ import { getErrorCode } from './ErrorConverter';
 
 const app = express();
 
-app.use(bodyParser.json({ limit: '50mb' }));
+app.use(express.json({ limit: '50mb' }));
 
 app.post('/calculateRaw', async (req, res) => {
   const body = req.body as RequestBody;
@@ -85,7 +84,7 @@ app.post(/^\/Measure\/(\$|%24)data-requirements/, async (req, res) => {
 
   const { measure } = body;
   try {
-    const dataRequirements = Calculator.calculateDataRequirements(measure);
+    const dataRequirements = await Calculator.calculateDataRequirements(measure);
     return res.json({ results: dataRequirements.results, warnings: dataRequirements.withErrors });
   } catch (error) {
     logger.log({
@@ -108,7 +107,11 @@ app.post('/calculate', async (req, res) => {
       patients,
       options || {} // options are optional, so this defaults to an empty Object
     );
-    return res.json({ results: calculateResult.results, withErrors: calculateResult.withErrors });
+    return res.json({
+      results: calculateResult.results,
+      groupClauseCoverageDetails: calculateResult.groupClauseCoverageDetails,
+      withErrors: calculateResult.withErrors
+    });
   } catch (error) {
     logger.log({
       level: 'error',

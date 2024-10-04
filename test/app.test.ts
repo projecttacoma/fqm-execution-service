@@ -1,4 +1,4 @@
-import { Calculator, CalculatorTypes, CQLTypes } from 'fqm-execution';
+import { Calculator, CalculatorTypes, CQLTypes, PopulationGroupResult } from 'fqm-execution';
 import { when } from 'jest-when';
 import request from 'supertest';
 import app from '../src/app';
@@ -57,11 +57,12 @@ const mockDataRequirementsResult: { results: fhir4.Library; debugOutput?: Calcul
       coding: [{ code: 'module-definition', system: 'http://terminology.hl7.org/CodeSystem/library-type' }]
     },
     status: 'draft'
-  }
+  },
+  debugOutput: {}
 };
 
 const DataRequirementsSpy = jest.spyOn(Calculator, 'calculateDataRequirements');
-when(DataRequirementsSpy).calledWith(mockMeasureBundle).mockReturnValue(mockDataRequirementsResult);
+when(DataRequirementsSpy).calledWith(mockMeasureBundle).mockReturnValue(Promise.resolve(mockDataRequirementsResult));
 
 test('data requirements calculate', async () => {
   const response = await request(app)
@@ -99,7 +100,10 @@ test('measure reports calculate', async () => {
   expect(response.body.results).toEqual(mockMeasureReportResult.results);
 });
 
-const mockResult: { results: CalculatorTypes.ExecutionResult[]; debugOutput?: CalculatorTypes.DebugOutput } = {
+const mockResult: {
+  results: CalculatorTypes.ExecutionResult<PopulationGroupResult>[];
+  debugOutput?: CalculatorTypes.DebugOutput;
+} = {
   results: [
     {
       patientId: ''
